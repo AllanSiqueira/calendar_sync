@@ -1,0 +1,19 @@
+default: &default
+  adapter: postgresql
+  host: db
+  encoding: unicode
+  password: <%= ENV['PG_PASSWORD'] %>
+  username: <%= ENV['PG_USERNAME'] %>
+  pool: <%= ENV.fetch('RAILS_MAX_THREADS') { 5 } %>
+
+development:
+  <<: *default
+  database: calendar_sync_development
+
+test:
+  <<: *default
+  database: calendar_sync_test
+
+production:
+  <<: *default
+  database: calendar_sync_production

@@ -1,0 +1,35 @@
+version: '3.7'
+
+services:
+  web:
+    env_file: .env
+    command: "bundle exec rails s -p 3000 -b '0.0.0.0'"
+    stdin_open: true
+    tty: true
+    entrypoint:
+      - ./entrypoint.sh
+    volumes:
+      - ".:/usr/src/app"
+      - gems:/usr/local/bundle
+    build:
+      context: .
+      args:
+        USER: ${USER}
+        UID: ${UID}
+    ports:
+      - 3002:3000
+    depends_on:
+      - db
+  db:
+    image: postgres:14.3-alpine
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=${PG_USERNAME}
+      - POSTGRES_USER=${PG_PASSWORD}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+
+volumes:
+  gems:
+  db-data:
